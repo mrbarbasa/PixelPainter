@@ -3,6 +3,9 @@
 function PixelPainter(width, height) {
   this.cellSize = 40; // Cell size default is 40px by 40px
 
+  var colorSelected = "#000000"; // Default color if none selected
+  var paintMode = true; // Default is PAINT mode
+
   var colorPalette = [
     ["#FFF62D", "#FCD640", "#FFF764", "#F4D478", "#356D00", "#3A7700"],
     ["#BDF232", "#74EF00", "#9DF113", "#63BB2B", "#72F071", "#A0E185"],
@@ -71,6 +74,30 @@ function PixelPainter(width, height) {
     return actions;
   }; // renderActions()
 
+  var renderStatus = function() {
+    var status = $("<div>", {
+      id: "status"
+    });
+
+    var colorStatus = $("<p>", {
+      id: "colorStatus",
+      text: "color: "
+    });
+    colorStatus
+      .append($("<span>")).children() // Need children to target the span
+      .css("background-color", colorSelected); // Default color
+
+    var modeStatus = $("<p>", {
+      id: "modeStatus",
+      text: "mode: " + (paintMode ? "PAINT" : "ERASE")
+    });
+
+    status.append(colorStatus);
+    status.append(modeStatus);
+
+    return status;
+  };
+
   var renderControls = function() {
     var controls = $("<div>", {
       id: "controls"
@@ -78,7 +105,7 @@ function PixelPainter(width, height) {
 
     controls.append(renderColorPalette());
     controls.append(renderActions());
-    // controls.append(renderDisplay());
+    controls.append(renderStatus());
 
     board.append(controls);
   }; // renderControls()
@@ -113,17 +140,28 @@ function PixelPainter(width, height) {
     board.append(artboard);
   }; // renderArtboard()
 
-  var registerEventListeners = function() {
-    var colorSelected = "#000000"; // Default color if none selected
-    var eraseMode = false; // Default false
+  var toggleMode = function(mode) {
+    paintMode = mode;
+    $("#modeStatus").text("mode: " + (paintMode ? "PAINT" : "ERASE"));
+  }; // toggleMode()
 
+  var registerEventListeners = function() {
+    // User selects a color
+    // Set mode to PAINT if not already in that mode
     $("body").on("click", ".color", function() {
-      eraseMode = false;
+      if (!paintMode) { // Only if in ERASE mode
+        toggleMode(true); // Set to PAINT mode
+      }
       colorSelected = $(this).css("background-color");
+      $("#colorStatus span").css("background-color", colorSelected);
     });
 
+    // User clicks erase button
+    // Set mode to ERASE if not already in that mode
     $("body").on("click", "#eraseAction", function() {
-      eraseMode = true;
+      if (paintMode) { // Only if in PAINT mode
+        toggleMode(false); // Set to ERASE mode
+      }
     });
 
     $("body").on("click", "#clearAction", function() {
@@ -134,10 +172,10 @@ function PixelPainter(width, height) {
     });
 
     $("body").on("click", ".cell", function() {
-      if (!eraseMode) {
+      if (paintMode) { // Paint the cell the selected color
         $(this).css("background-color", colorSelected);
       }
-      else {
+      else { // "Erase" the color from the cell
         $(this).css("background-color", "transparent");
       }
     });

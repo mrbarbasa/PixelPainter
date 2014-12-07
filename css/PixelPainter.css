@@ -35,6 +35,17 @@
   background-color: orange;
 }
 
+#status {
+  background-color: lightyellow;
+}
+
+#colorStatus span {
+  display: inline-block;
+  border: 1px solid black;
+  width: 16px;
+  height: 16px;
+}
+
 .color {
   border-top: 3px solid black;
   border-left: 3px solid black;
