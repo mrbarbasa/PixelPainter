@@ -9,11 +9,11 @@
 }
 
 #container {
-  background-color: lightblue;
+  /*background-color: lightblue;*/
 }
 
 #pixelPainter {
-  background-color: #EAEAEA;
+  background-color: #EDEFF5;
   margin: 40px;
   padding: 40px;
 }
@@ -23,7 +23,7 @@
 
 #controls {
   float: left;
-  background-color: pink;
+  /*background-color: pink;*/
 }
 
 #palette {
@@ -36,7 +36,7 @@
 }
 
 #status {
-  background-color: lightyellow;
+  /*background-color: lightyellow;*/
 }
 
 #colorStatus span {
